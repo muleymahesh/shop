@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.maks.farmfresh24.adapter.MyOrderAdapter;
+import com.maks.farmfresh24.adapter.MyOrderListAdapter;
 import com.maks.farmfresh24.adapter.ProductAdapter;
 import com.maks.farmfresh24.model.OrderDTO;
 import com.maks.farmfresh24.model.OrderPojo;
@@ -40,7 +40,6 @@ public class MyOrdersActivity extends AppCompatActivity implements ProductAdapte
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ProductAdapte
 
         getData();
 
-        adapter = new MyOrderAdapter(listCategory, MyOrdersActivity.this);
+        adapter = new MyOrderListAdapter(listCategory, MyOrdersActivity.this);
 //        recyclerView.setItemAnimator(new DefaultItemAnimator());
 //        //Adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
@@ -69,12 +68,13 @@ public class MyOrdersActivity extends AppCompatActivity implements ProductAdapte
     }
 
 
-    class ProductTask extends AsyncTask<String, Void,String>{
+    class ProductTask extends AsyncTask<String, Void, String> {
         ProgressDialog pd;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd= new ProgressDialog(MyOrdersActivity.this);
+            pd = new ProgressDialog(MyOrdersActivity.this);
             pd.setMessage("Loading...");
             pd.show();
             pd.setCancelable(false);
@@ -85,10 +85,10 @@ public class MyOrdersActivity extends AppCompatActivity implements ProductAdapte
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            Log.e("request",ulr[1]);
+            Log.e("request", ulr[1]);
             RequestBody body = RequestBody.create(JSON, ulr[1]);
             Request request = new Request.Builder()
-                    .url (ulr[0])
+                    .url(ulr[0])
                     .post(body)
                     .build();
 
@@ -105,27 +105,28 @@ public class MyOrdersActivity extends AppCompatActivity implements ProductAdapte
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(pd!=null && pd.isShowing()){
+            if (pd != null && pd.isShowing()) {
                 pd.dismiss();
             }
-            if(s!=null){
+            if (s != null) {
                 try {
-                    Log.e("response",s);
+                    Log.e("response", s);
                     parseData(s);//new JSONObject(s).getJSONArray("data")
 
-                }catch(Exception e)
-                {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void getData(){
-        new ProductTask().execute(Constants.WS_URL,"{\"method\":\"get_order\",\"user_id\":\""+new AppPreferences(MyOrdersActivity.this).getEmail()+"\"}");
+    private void getData() {
+        new ProductTask().execute(Constants.WS_URL, "{\"method\":\"get_order\",\"user_id\":\"" + new AppPreferences(MyOrdersActivity.this).getEmail() + "\"}");
     }
 
 
     //This method will parse json data
-    private void parseData(String array){
+    private void parseData(String array) {
 
         OrderDTO arr = new Gson().fromJson(array.toString(), OrderDTO.class);
 
@@ -151,8 +152,6 @@ public class MyOrdersActivity extends AppCompatActivity implements ProductAdapte
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }
-
-
     }
 
     @Override
