@@ -335,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements CatgoryAdapter.On
             "Feedback",
             "Change password",
             "Bulk orders",
+            "Contact Us",
             "Logout"};
 
 
@@ -421,7 +422,11 @@ public class MainActivity extends AppCompatActivity implements CatgoryAdapter.On
                 startActivity(intent4);
                 break;
             }
-            case 9: //logout
+            case 9:
+                Intent contactIntent = new Intent(MainActivity.this, ContactUsActivity.class);
+                startActivity(contactIntent);
+                break;
+            case 10: //logout
                 new AppPreferences(MainActivity.this).logout();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);

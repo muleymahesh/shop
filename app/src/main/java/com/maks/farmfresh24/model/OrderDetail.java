@@ -7,7 +7,9 @@ package com.maks.farmfresh24.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OrderDetail {
+import java.io.Serializable;
+
+public class OrderDetail implements Serializable {
 
     @SerializedName("qty")
     @Expose
@@ -34,54 +36,42 @@ public class OrderDetail {
     }
 
     /**
-     *
-     * @return
-     * The qty
+     * @return The qty
      */
     public String getQty() {
         return qty;
     }
 
     /**
-     *
-     * @param qty
-     * The qty
+     * @param qty The qty
      */
     public void setQty(String qty) {
         this.qty = qty;
     }
 
     /**
-     *
-     * @return
-     * The productName
+     * @return The productName
      */
     public String getProductName() {
         return productName;
     }
 
     /**
-     *
-     * @param productName
-     * The product_name
+     * @param productName The product_name
      */
     public void setProductName(String productName) {
         this.productName = productName;
     }
 
     /**
-     *
-     * @return
-     * The mrp
+     * @return The mrp
      */
     public String getMrp() {
         return mrp;
     }
 
     /**
-     *
-     * @param mrp
-     * The mrp
+     * @param mrp The mrp
      */
     public void setMrp(String mrp) {
         this.mrp = mrp;

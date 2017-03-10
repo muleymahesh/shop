@@ -1,10 +1,10 @@
 package com.maks.farmfresh24.model;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class OrderPojo {
@@ -26,21 +26,17 @@ public class OrderPojo {
     private String order_status;
     @SerializedName("details")
     @Expose
-    private List<OrderDetail> details = new ArrayList<OrderDetail>();
+    private ArrayList<OrderDetail> details = new ArrayList<OrderDetail>();
 
     /**
-     *
-     * @return
-     * The oId
+     * @return The oId
      */
     public String getOId() {
         return oId;
     }
 
     /**
-     *
-     * @param oId
-     * The o_id
+     * @param oId The o_id
      */
     public void setOId(String oId) {
         this.oId = oId;
@@ -55,74 +51,58 @@ public class OrderPojo {
     }
 
     /**
-     *
-     * @return
-     * The amount
+     * @return The amount
      */
     public String getAmount() {
         return amount;
     }
 
     /**
-     *
-     * @param amount
-     * The amount
+     * @param amount The amount
      */
     public void setAmount(String amount) {
         this.amount = amount;
     }
 
     /**
-     *
-     * @return
-     * The shippingType
+     * @return The shippingType
      */
     public String getShippingType() {
         return shippingType;
     }
 
     /**
-     *
-     * @param shippingType
-     * The shipping_type
+     * @param shippingType The shipping_type
      */
     public void setShippingType(String shippingType) {
         this.shippingType = shippingType;
     }
 
     /**
-     *
-     * @return
-     * The date
+     * @return The date
      */
     public String getDate() {
         return date;
     }
 
     /**
-     *
-     * @param date
-     * The date
+     * @param date The date
      */
     public void setDate(String date) {
         this.date = date;
     }
 
     /**
-     *
-     * @return
-     * The details
+     * @return The details
      */
     public List<OrderDetail> getDetails() {
         return details;
     }
 
     /**
-     *
-     * @param details
-     * The details
+     * @param details The details
      */
-    public void setDetails(List<OrderDetail> details) {
+    public void setDetails(ArrayList<OrderDetail> details) {
         this.details = details;
     }
 

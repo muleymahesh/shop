@@ -6,6 +6,7 @@ package com.maks.farmfresh24.adapter;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.maks.farmfresh24.MyOrdersActivity;
 import com.maks.farmfresh24.R;
-import com.maks.farmfresh24.model.OrderPojo;
+import com.maks.farmfresh24.model.OrderDetail;
 import com.maks.farmfresh24.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -26,19 +26,19 @@ import java.util.List;
  */
 public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHolder> {
 
-   // private CategoryActivity context;
-   private MyOrdersActivity context;
+    // private CategoryActivity context;
+    private Context context;
     OnItemClickListener mItemClickListener;
     //List of Category
-    List<OrderPojo> Category;
+    List<OrderDetail> Category;
     Activity activity;
 
-    public MyOrderAdapter(List<OrderPojo> Category, MyOrdersActivity context){
+    public MyOrderAdapter(List<OrderDetail> Category, Context context) {
         super();
         this.context = context;
         //Getting all the Category
         this.Category = Category;
-        activity = (Activity)context;
+        activity = (Activity) context;
     }
 
     @Override
@@ -52,19 +52,15 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        OrderPojo category =  Category.get(position);
+        OrderDetail category = Category.get(position);
 
-    try {
+        Picasso.with(context).load(Constants.PRODUCT_IMG_PATH + category.getImgUrl()).resize(400, 220).centerCrop().into(holder.imageView);
+        holder.txtName.setText(category.getProductName());
+        holder.txtPrice.setText("Rs. " + category.getMrp());
+        holder.txtQuantity.setText("Quantity: " + category.getQty());
 
-        if(category.getDetails()!=null && !category.getDetails().isEmpty()) {
-            Picasso.with(context).load(Constants.PRODUCT_IMG_PATH + category.getDetails().get(0).getImgUrl()).resize(400, 220).centerCrop().into(holder.imageView);
-            holder.txtName.setText(category.getDetails().get(0).getProductName());
-            holder.txtPrice.setText("Rs. "+category.getDetails().get(0).getMrp());
-        }
-
-    }catch(Exception e){}
-        holder.txtStatus.setText(category.getOrder_status());
-        holder.txtID.setText( category.getOId()+" Date: "+category.getDate());
+        //holder.txtStatus.setText(category.getOrder_status());
+        //holder.txtID.setText(category.getOId() + " Date: " + category.getDate());
     }
 
     @Override
@@ -72,28 +68,28 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         return Category.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView imageView;
-        public TextView txtName, txtStatus, txtPrice, txtID;
+        public TextView txtName, txtStatus, txtPrice, txtID, txtQuantity;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             imageView = (ImageView) itemView.findViewById(R.id.imgProduct);
             txtName = (TextView) itemView.findViewById(R.id.txtName);
-//            txtName.setTypeface(Utils.setLatoFontBold(activity));
-
+//            txtOrderDate.setTypeface(Utils.setLatoFontBold(activity));
+            txtQuantity = (TextView) itemView.findViewById(R.id.txtQuantity);
             txtStatus = (TextView) itemView.findViewById(R.id.txtStatus);
-//            txtStatus.setTypeface(Utils.setLatoFontBold(activity));
+//            txtOrderId.setTypeface(Utils.setLatoFontBold(activity));
             txtPrice = (TextView) itemView.findViewById(R.id.txtPrice);
-//            txtPrice.setTypeface(Utils.setLatoFontBold(activity));
+//            txtOrderPrice.setTypeface(Utils.setLatoFontBold(activity));
             txtID = (TextView) itemView.findViewById(R.id.txtID);
 //            txtID.setTypeface(Utils.setLatoFontBold(activity));
         }
 
         @Override
         public void onClick(View v) {
-            context.onItemClick(v,getPosition());
+            //context.onItemClick(v, getPosition());
         }
     }
 

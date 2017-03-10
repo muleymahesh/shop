@@ -3,13 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.maks.farmfresh24.MyOrdersActivity"
-    >
+    tools:context="com.maks.farmfresh24.MyOrdersActivity">
+
     <include layout="@layout/toolbar" />
 
-    <android.support.v7.widget.RecyclerView
+    <TextView
+        android:id="@+id/txtAmount"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:background="@drawable/card_state_pressed"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:text="Amount"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="6dp">
 

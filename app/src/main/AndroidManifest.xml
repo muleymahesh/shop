@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.maks.farmfresh24">
+
     <uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
@@ -88,6 +90,7 @@
             android:name=".MyWalletActivity"
             android:label="@string/title_activity_my_wallet"
             android:theme="@style/AppTheme" />
+        <activity android:name=".MyOrderDetailsActivity" />
     </application>
 
 </manifest>
