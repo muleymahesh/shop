@@ -1,6 +1,8 @@
 package com.maks.farmfresh24;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,10 +21,21 @@ import com.maks.farmfresh24.dbutils.SQLiteUtil;
 import com.maks.farmfresh24.model.CartList;
 import com.maks.farmfresh24.model.ShoppingCart;
 import com.maks.farmfresh24.utils.AppPreferences;
+import com.maks.farmfresh24.utils.Constants;
 import com.maks.farmfresh24.utils.TypefaceSpan;
 import com.maks.farmfresh24.utils.Utils;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MyCartActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
@@ -46,17 +59,16 @@ public class MyCartActivity extends AppCompatActivity {
         dbUtil = new SQLiteUtil();
         Log.e("TAG", "Inside My Cart ");
         setListener();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadData();
-
     }
 
     public void loadData() {
-
         list = dbUtil.getData(MyCartActivity.this);
         if (list.size() == 0) {
             btnCheckout.setText("Start Shopping");
@@ -80,11 +92,16 @@ public class MyCartActivity extends AppCompatActivity {
             }
         }
 
-        adapter = new CartAdapter(list, MyCartActivity.this);
+       /* adapter = new CartAdapter(list, MyCartActivity.this);
         recyclerView.setAdapter(adapter);
-
+*/
         txtRs.setText(String.format("Rs. %.2f", grandTotal));
-
+        if (list.size() > 0) {
+            getActualPrizes();
+        } else {
+            adapter = new CartAdapter(list, MyCartActivity.this);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     public void onItemClick(View v, int position) {
@@ -111,10 +128,7 @@ public class MyCartActivity extends AppCompatActivity {
             sh.setQuantity("" + (q + 1));
             dbUtil.insert(sh, this);
         }
-
-
         loadData();
-
     }
 
     private void setListener() {
@@ -179,5 +193,81 @@ public class MyCartActivity extends AppCompatActivity {
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
+    }
+
+    private void getActualPrizes() {
+        String p_id = "";
+        for (int i = 0; i < list.size(); i++) {
+            p_id += list.get(i).getProduct_id() + ",";
+        }
+        String request;
+        request = "{\"method\":\"get_product_detail_by_ID\"" +
+                ",\"email\":\"" + new AppPreferences(MyCartActivity.this).getEmail() + "\"" +
+                ",\"p_id\":\"" + p_id + "\"" +
+                "}";
+        new ProductTask().execute(Constants.WS_URL, request);
+    }
+
+    class ProductTask extends AsyncTask<String, Void, String> {
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MyCartActivity.this);
+            pd.setMessage("Loading...");
+            pd.show();
+            pd.setCancelable(false);
+        }
+
+        @Override
+        protected String doInBackground(String... ulr) {
+            Response response = null;
+            OkHttpClient client = new OkHttpClient();
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            Log.e("request", ulr[1]);
+            RequestBody body = RequestBody.create(JSON, ulr[1]);
+            Request request = new Request.Builder()
+                    .url(ulr[0])
+                    .post(body)
+                    .build();
+
+            try {
+                response = client.newCall(request).execute();
+                return response.body().string();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (pd != null && pd.isShowing()) {
+                pd.dismiss();
+            }
+            if (s != null) {
+                try {
+                    Log.e("response", s);
+                    JSONArray jsonArray = new JSONObject(s).optJSONArray("data");
+                    if (jsonArray != null) {
+                        for (int j = 0; j < list.size(); j++) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject dataObject = jsonArray.getJSONObject(i);
+                                if (list.get(j).getId().equalsIgnoreCase(dataObject.optString("p_id"))) {
+                                    list.get(j).getProduct().setMrp(dataObject.optString("mrp"));
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            adapter = new CartAdapter(list, MyCartActivity.this);
+            recyclerView.setAdapter(adapter);
+        }
     }
 }

@@ -5,11 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.maks.farmfresh24.model.Address;
 import com.maks.farmfresh24.model.ShoppingCart;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -55,7 +54,6 @@ public class SQLiteUtil {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if(exist){
-
             contentValues.put("id",id);
             db.insertWithOnConflict("tbl_cart",null,contentValues,SQLiteDatabase.CONFLICT_REPLACE);
         }else{
@@ -66,7 +64,6 @@ public class SQLiteUtil {
     }
 
     public void addAddress(Address address, Context context){
-
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("fname",address.getFname());

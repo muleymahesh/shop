@@ -4,9 +4,9 @@ package com.maks.farmfresh24.utils;
  * Created by maks on 7/2/16.
  */
 public class Constants {
-    //public final static String PRODUCT_IMG_PATH ="http://www.makslab.com/farmfresh24/admin/product_image/";
+    public final static String PRODUCT_IMG_PATH ="http://www.makslab.com/farmfresh24/admin/product_image/";
 
-    public final static String PRODUCT_IMG_PATH ="http://www.farmfresh24.in/farmfresh24/admin/product_image/";
+    //public final static String PRODUCT_IMG_PATH ="http://www.farmfresh24.in/farmfresh24/admin/product_image/";
     public final static String TAG_CAT_IMG ="cat_img";
     public final static String TAG_CAT_ID ="cat_id";
     public final static String TAG_CAT_NAME ="cat_name";
@@ -56,8 +56,8 @@ public static String LatoFont = "fonts/Roboto-Regular.ttf";
 
 
     //Webservices
-    //public static final String WS_URL = "http://www.makslab.com/farmfresh24/admin/ws/api.php";
-    public static final String WS_URL = "http://www.farmfresh24.in/farmfresh24/admin/ws/api.php";
+    public static final String WS_URL = "http://www.makslab.com/farmfresh24/admin/ws/newapi.php";
+    //public static final String WS_URL = "http://www.farmfresh24.in/farmfresh24/admin/ws/api.php";
 
 
     public static final String pincodes[] = {"122101","122002","122003","122008","122009","122010","122011","122018"};

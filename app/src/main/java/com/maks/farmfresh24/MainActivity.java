@@ -456,8 +456,9 @@ public class MainActivity extends AppCompatActivity implements CatgoryAdapter.On
             handler.postDelayed(runnable, 4000);
             if (bannerList.isEmpty()) {
                 getData();
-
             }
+        } else {
+            getData();
         }
     }
 

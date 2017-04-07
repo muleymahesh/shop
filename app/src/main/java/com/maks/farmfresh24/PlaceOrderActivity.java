@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.maks.farmfresh24.dbutils.SQLiteUtil;
 import com.maks.farmfresh24.model.Address;
 import com.maks.farmfresh24.model.CartList;
+import com.maks.farmfresh24.model.DiscountItem;
 import com.maks.farmfresh24.model.ShoppingCart;
 import com.maks.farmfresh24.utils.AppPreferences;
 import com.maks.farmfresh24.utils.Constants;
@@ -78,13 +79,13 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
     private TextView txtAmt;
     private TextView txtDeliveryCharges, txtAmountToPay;
     Button orderBtn, btnAddr;
-
+    DiscountItem discountItem;
     Spinner spnTimeSlot;
     //    ,spnPaymentType;
     ArrayList<ShoppingCart> list;
     String amount, selected_date;
     private boolean isOnline = false;
-    int discountedAmount = 0;
+    float discountedAmount = 0;
 
     private DatePickerDialog fromDatePickerDialog;
     private DatePickerDialog toDatePickerDialog;
@@ -104,6 +105,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
     // Used when generating hash from SDK
     private PayUChecksum checksum;
     private AppPreferences pref;
+    StringBuilder discountedApplied = new StringBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,13 +148,14 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
         amount = amount.substring(0, amount.length() - 3);
 
         txtAmt.setText(amount);
+        discountedAmount = Integer.parseInt(amount);
+        getDiscounts();
         // discountedAmount = Integer.parseInt(amount);
         /*addresses.clear();
         addresses.addAll(new SQLiteUtil().getAddressList(this));
         ListView addrlist = (ListView) findViewById(R.id.listView);
         MyAdapter adapter = new MyAdapter(this, addresses);
         addrlist.setAdapter(adapter);*/
-        setDefaultData();
     }
 
 
@@ -237,47 +240,68 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
         radioGroupPaymentMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                discountedApplied = new StringBuilder();
                 if (i == R.id.radioOnline) {
                     isOnline = true;
                     findViewById(R.id.txtDiscount).setVisibility(View.VISIBLE);
-                    discountedAmount = (int) (Integer.parseInt(amount) * (5.0f / 100.0f));
-                    discountedAmount = (Integer.parseInt(amount)) - discountedAmount;
-                    ((TextView) findViewById(R.id.txtDiscount)).setText("5% Discount amount to pay: " + discountedAmount);
+                    //discountedAmount = (int) (Integer.parseInt(amount) * (5.0f / 100.0f));
+                    discountedAmount = (Integer.parseInt(amount)) - Float.valueOf(discountItem.getOnline_Transction_Discount());
+                    ((TextView) findViewById(R.id.txtDiscount)).setText("5% Discount amount to pay: " + discountItem.getOnline_Transction_Discount());
+                    discountedApplied.append("Online 5% Discount amount: " + discountItem.getOnline_Transction_Discount() + "\n");
                 } else if (i == R.id.radioCOD) {
                     isOnline = false;
-                    findViewById(R.id.txtDiscount).setVisibility(View.GONE);
+                    //findViewById(R.id.txtDiscount).setVisibility(View.GONE);
                     discountedAmount = Integer.parseInt(amount);
                 }
+                setDefaultData();
             }
         });
     }
 
     private void setDefaultData() {
-        //   txtAmt.setText(amount);
-        int firstOrderDiscount = 0;
+        txtAmt.setText(amount);
+        /*int firstOrderDiscount = 0;
         Log.d("Amount", pref.getFirstOrderAmount());
-        if (pref.getOrderCount()==1) {
+        if (pref.getOrderCount() == 1) {
             firstOrderDiscount = Integer.parseInt(pref.getFirstOrderAmount()) / 2;
             if (firstOrderDiscount >= 250) {
                 amount = String.valueOf((Integer.parseInt(amount)) - 250);
             } else {
                 amount = String.valueOf((Integer.parseInt(amount)) - firstOrderDiscount);
             }
-                if(Integer.parseInt(amount)<0){
-                    amount="0";
-                }
+            if (Integer.parseInt(amount) < 0) {
+                amount = "0";
+            }
+        }*/
+        if (!discountItem.getSecond_Order_Discount().equalsIgnoreCase("0")) {
+            discountedAmount = discountedAmount - Integer.parseInt(discountItem.getSecond_Order_Discount());
+            discountedApplied.append("Second Order Discount amount: " + discountItem.getSecond_Order_Discount() + "\n");
+        }
+        if (!discountItem.getMonthly_5000_Amount_Discount().equalsIgnoreCase("0")) {
+            discountedAmount = discountedAmount - Integer.parseInt(discountItem.getMonthly_5000_Amount_Discount());
+            discountedApplied.append("Monthly 5000 Discount amount: " + discountItem.getMonthly_5000_Amount_Discount() + "\n");
+        }
+        if (!discountItem.getMonthly_10000_Amount_Discount().equalsIgnoreCase("0")) {
+            discountedAmount = discountedAmount - Integer.parseInt(discountItem.getMonthly_10000_Amount_Discount());
+            discountedApplied.append("Monthly 10000 Discount amount: " + discountItem.getMonthly_10000_Amount_Discount() + "\n");
+        }
+        if (!discountItem.getMonthly_15000_Amount_Discount().equalsIgnoreCase("0")) {
+            discountedAmount = discountedAmount - Integer.parseInt(discountItem.getMonthly_15000_Amount_Discount());
+            discountedApplied.append("Monthly 15000 Discount amount: " + discountItem.getMonthly_15000_Amount_Discount() + "\n");
         }
 
-        if (Integer.parseInt(amount) > 250) {
+        if (discountedAmount > 250) {
             txtDeliveryCharges.setText("You are eligible for free delivery");
-            discountedAmount = Integer.parseInt(amount);
+            //discountedAmount = Integer.parseInt(dataObject.getAmount_Payable());
         } else {
             txtDeliveryCharges.setText("Delivery charges is Rs.30 for order below Rs.250");
-            discountedAmount = Integer.parseInt(amount) + 30;
+            discountedAmount = discountedAmount + Integer.parseInt(discountItem.getDelivery_Charges());
         }
-        amount = String.valueOf(discountedAmount);
-        txtAmountToPay.setText("Total Amount: Rs." + amount);
+        //amount = String.valueOf(discountedAmount);
+        txtAmountToPay.setText("Total Amount: Rs." + discountedAmount);
         //    txtAmt.setText(amount);
+        ((TextView) findViewById(R.id.txtDiscount)).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.txtDiscount)).setText(discountedApplied);
     }
 
     private void initToolbar() {
@@ -379,7 +403,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
 
                         pref.setOrderCount(json.optInt("orderCount"));
                         int baseamount = Integer.parseInt(txtAmt.getText().toString());
-                        pref.setFirstOrderAmount(""+(baseamount));
+                        pref.setFirstOrderAmount("" + (baseamount));
                         AlertDialog.Builder alert = new AlertDialog.Builder(PlaceOrderActivity.this);
                         alert.setMessage("Your order placed successfully");
                         alert.setTitle("Thank you !");
@@ -447,10 +471,7 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
                 if (spnTimeSlot.getSelectedItem().toString().equals("9 - 11 AM")) {
 
                 }
-
-
 //                makePayment(v);
-
                 if (isOnline) {
                     navigateToBaseActivity();
                 } else {
@@ -471,11 +492,33 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
         }
 
         data1 += "]\"";
-        String req = "{\"method\":\"add_oder\",\"first_name\":\"" + addresses.get(0).getFname() + "\",\"last_name\":\"" + addresses.get(0).getLname() + "\"," +
-                "\"gender\":\"Male\",\"email\":\"" + new AppPreferences(PlaceOrderActivity.this).getEmail() + "\",\"amount\":\"" + discountedAmount +
-                "\",\"shipping_type\":\"" + OrderMode + "\",\"street\":\"" + addresses.get(0).getArea() + "\",\"city\":\"" + addresses.get(0).getAddr() + "\",\"state\":\"" + addresses.get(0).getLandmark() + "\",\"country\":\"India\",\"zipcode\":\"" + addresses.get(0).getZipcode() +
-                "\",\"phone\":\"" + addresses.get(0).getPhone() + "\",\"order_detail\":\"Delivery Date " + txtDate.getText().toString() + ", between " + spnTimeSlot.getSelectedItem().toString() + "\",\"user_id\":\"23\",\"p_id\":\"" + p_id + "\",\"qty\":\"" + qty + "\",\"price\":\"" + price + "\"}";
-
+        String req = "{\"method\":\"add_oder\"" +
+                ",\"first_name\":\"" + addresses.get(0).getFname() + "\"" +
+                ",\"last_name\":\"" + addresses.get(0).getLname() + "\"," +
+                "\"gender\":\"Male\"" +
+                ",\"email\":\"" + new AppPreferences(PlaceOrderActivity.this).getEmail() + "\"" +
+                ",\"amount\":\"" + discountedAmount +
+                "\",\"shipping_type\":\"" + OrderMode + "\"" +
+                ",\"street\":\"" + addresses.get(0).getArea() + "\"" +
+                ",\"city\":\"" + addresses.get(0).getAddr() + "\"" +
+                ",\"state\":\"" + addresses.get(0).getLandmark() + "\"" +
+                ",\"country\":\"India\"" +
+                ",\"zipcode\":\"" + addresses.get(0).getZipcode() +
+                "\",\"phone\":\"" + addresses.get(0).getPhone() + "\"" +
+                ",\"order_detail\":\"Delivery Date " + txtDate.getText().toString() + "" +
+                ", between " + spnTimeSlot.getSelectedItem().toString() + "\"" +
+                ",\"user_id\":\"23\"" +
+                ",\"p_id\":\"" + p_id + "\"" +
+                ",\"qty\":\"" + qty + "\"," +
+                "\"price\":\"" + price + "\"" +
+                ",\"Second_Order_Discount\":\"" + discountItem.getSecond_Order_Discount() + "\"" +
+                ",\"Monthly_5000_Amount_Discount\":\"" + discountItem.getMonthly_5000_Amount_Discount() + "\"" +
+                ",\"Monthly_10000_Amount_Discount\":\"" + discountItem.getMonthly_10000_Amount_Discount() + "\"" +
+                ",\"Monthly_15000_Amount_Discount\":\"" + discountItem.getMonthly_15000_Amount_Discount() + "\"" +
+                ",\"Online_Transction_Discount\":\"" + discountItem.getOnline_Transction_Discount() + "\"" +
+                ",\"Delivery_Charges\":\"" + discountItem.getDelivery_Charges() + "\"" +
+                ",\"wallet\":\"" + new AppPreferences(PlaceOrderActivity.this).getWalletAmount() + "\"" +
+                "}";
 
         Log.e("request", req);
 
@@ -1300,4 +1343,131 @@ public class PlaceOrderActivity extends AppCompatActivity implements OneClickPay
 
     }
 
+/*
+    private void getData() {
+        String street = "", city = "", state = "", country = "", zipcode = "", phone = "", fname = "", lname = "", email = "";
+        List<Address> address = new SQLiteUtil().getAddressList(MyCartActivity.this);
+        if (address != null && address.size() > 0) {
+            street = address.get(0).getArea();
+            city = address.get(0).getLandmark();
+            zipcode = address.get(0).getZipcode();
+            fname = address.get(0).getFname();
+            lname = address.get(0).getLname();
+            phone = address.get(0).getPhone();
+        }
+        String p_id = "", qty = "";
+        String price = "";
+        for (int i = 0; i < list.size(); i++) {
+            p_id += list.get(i).getProduct_id() + ",";
+            qty += list.get(i).getQuantity() + ",";
+            price = list.get(i).getProduct().getMrp() + ",";
+        }
+        String request;
+        request = "{\"method\":\"add_order\"" +
+                ",\"first_name\":\"" + fname + "\"" +
+                ",\"last_name\":\"" + lname + "\"" +
+                ",\"gender\":\"Male\"" +
+                ",\"email\":\"" + email + "\"" +
+                ",\"amount\":\"" + grandTotal + "\"" +
+                ",\"shipping_type\":\"Cash on delivery\"" +
+                ",\"street\":\"" + street + "\"" +
+                ",\"city\":\"" + city + "\"" +
+                ",\"state\":\"Maharashtra\"" + "\"" +
+                ",\"country\":\"India\"" + "\"" +
+                ",\"zipcode\":\"" + zipcode + "\"" +
+                ",\"phone\":\"" + phone + "\"" +
+                ",\"order_detail\":\"Delivery Date 31/03/2017" +
+                ", between Before 9:00AM\"" +
+                ",\"user_id\":\"23\"" +
+                ",\"p_id\":\"" + p_id + "\"" +
+                ",\"qty\":\"" + qty + "\"" +
+                ",\"price\":\"" + price + "\"" +
+                ",\"Second_Order_Discount\":\"0\"" +
+                ",\"Monthly_5000_Amount_Discount\":\"0\"" +
+                ",\"Monthly_10000_Amount_Discount\":\"0\"" +
+                ",\"Monthly_15000_Amount_Discount\":\"0\"" +
+                ",\"Online_Transction_Discount\":\"0\"" +
+                ",\"Delivery_Charges\":\"30\"" +
+                ",\"wallet\":\"0\"}";
+        new ProductTask().execute(Constants.WS_URL, request);
+    }
+*/
+
+    private void getDiscounts() {
+        String p_id = "";
+        for (int i = 0; i < list.size(); i++) {
+            p_id += list.get(i).getProduct_id() + ",";
+        }
+        String request;
+        request = "{\"method\":\"get_discount_from_server\"" +
+                ",\"email\":\"" + new AppPreferences(PlaceOrderActivity.this).getEmail() + "\"" +
+                ",\"totalamount\":\"" + amount + "\"" +
+                "}";
+        new ProductTask().execute(Constants.WS_URL, request);
+    }
+
+    class ProductTask extends AsyncTask<String, Void, String> {
+        ProgressDialog pd;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(PlaceOrderActivity.this);
+            pd.setMessage("Loading...");
+            pd.show();
+            pd.setCancelable(false);
+        }
+
+        @Override
+        protected String doInBackground(String... ulr) {
+            Response response = null;
+            OkHttpClient client = new OkHttpClient();
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            Log.e("request", ulr[1]);
+            RequestBody body = RequestBody.create(JSON, ulr[1]);
+            Request request = new Request.Builder()
+                    .url(ulr[0])
+                    .post(body)
+                    .build();
+
+            try {
+                response = client.newCall(request).execute();
+                return response.body().string();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (pd != null && pd.isShowing()) {
+                pd.dismiss();
+            }
+            if (s != null) {
+                try {
+                    Log.e("response", s);
+                    JSONArray jsonArray = new JSONObject(s).optJSONArray("data");
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject dataObject = jsonArray.getJSONObject(i);
+                            discountItem = new DiscountItem();
+                            discountItem.setAmount_Payable(dataObject.optString("Amount_Payable"));
+                            discountItem.setDelivery_Charges(dataObject.optString("Delivery_Charges"));
+                            discountItem.setMonthly_5000_Amount_Discount(dataObject.optString("Monthly_5000_Amount_Discount"));
+                            discountItem.setMonthly_10000_Amount_Discount(dataObject.optString("Monthly_10000_Amount_Discount"));
+                            discountItem.setMonthly_15000_Amount_Discount(dataObject.optString("Monthly_15000_Amount_Discount"));
+                            discountItem.setOnline_Transction_Discount(dataObject.optString("Online_Transction_Discount"));
+                            discountItem.setSecond_Order_Discount(dataObject.optString("Second_Order_Discount"));
+                            setDefaultData();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
