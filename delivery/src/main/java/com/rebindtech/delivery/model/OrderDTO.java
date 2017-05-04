@@ -1,14 +1,15 @@
-package com.maks.farmfresh24.model;
+package com.rebindtech.delivery.model;
 
 /**
  * Created by maks on 16/6/16.
  */
 
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class OrderDTO {

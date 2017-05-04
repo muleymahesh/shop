@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.utils;
+package com.rebindtech.delivery.utils;
 
 import android.app.Activity;
 import android.graphics.Typeface;

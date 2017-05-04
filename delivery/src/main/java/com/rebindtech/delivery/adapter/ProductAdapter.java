@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.adapter;
+package com.rebindtech.delivery.adapter;
 
 /**
  * Created by maks on 7/2/16.
@@ -15,14 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.maks.farmfresh24.ProductListActivity;
-import com.maks.farmfresh24.R;
-import com.maks.farmfresh24.dbutils.SQLiteUtil;
-import com.maks.farmfresh24.model.Product;
-import com.maks.farmfresh24.model.ShoppingCart;
-import com.maks.farmfresh24.utils.Constants;
-import com.maks.farmfresh24.utils.Utils;
-import com.squareup.picasso.Picasso;
+import com.rebindtech.delivery.MainActivity;
+import com.rebindtech.delivery.R;
+import com.rebindtech.delivery.model.Product;
+import com.rebindtech.delivery.utils.Utils;
 
 import java.util.List;
 
@@ -31,13 +27,13 @@ import java.util.List;
  */
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 
-    private ProductListActivity context;
+    private MainActivity context;
     OnItemClickListener mItemClickListener;
     //List of Category
     List<Product> Category;
     Activity activity;
 
-    public ProductAdapter(List<Product> Category, ProductListActivity context) {
+    public ProductAdapter(List<Product> Category, MainActivity context) {
         super();
         //Getting all the Category
         this.Category = Category;
@@ -60,8 +56,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         Product product = Category.get(position);
 
         if (product.getImgs() != null && !product.getImgs().isEmpty())
-            Picasso.with(context).load(Constants.PRODUCT_IMG_PATH + product.getImgs().get(0).getImg_url()).centerInside().resize(300, 300).placeholder(R.drawable.logo1_grey).into(holder.imageView);
-        holder.textViewName.setText(product.getProduct_name());
+            //Picasso.with(context).load(Constants.PRODUCT_IMG_PATH + product.getImgs().get(0).getImg_url()).centerInside().resize(300, 300).placeholder(R.drawable.logo1_grey).into(holder.imageView);
+            holder.textViewName.setText(product.getProduct_name());
 
         holder.textDisc.setText(product.getOffer_name());
 
@@ -85,7 +81,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         }
 
 
-        holder.btnMinus.setOnClickListener(new View.OnClickListener() {
+        /*holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -114,9 +110,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
                 }
             }
-        });
+        });*/
 
-        holder.btnPlus.setOnClickListener(new View.OnClickListener() {
+        /*holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -139,7 +135,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
             }
         });
-
+*/
     }
 
     @Override
@@ -173,7 +169,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         @Override
         public void onClick(View v) {
-            context.onItemClick(v, getPosition());
+            //context.onItemClick(v, getPosition());
         }
     }
 

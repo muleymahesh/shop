@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.model;
+package com.rebindtech.delivery.model;
 
 /**
  * Created by maks on 16/6/16.

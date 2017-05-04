@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.utils;
+package com.rebindtech.delivery.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

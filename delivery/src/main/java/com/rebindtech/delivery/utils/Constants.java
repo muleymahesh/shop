@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.utils;
+package com.rebindtech.delivery.utils;
 
 /**
  * Created by maks on 7/2/16.
@@ -56,7 +56,7 @@ public static String LatoFont = "fonts/Roboto-Regular.ttf";
 
 
     //Webservices
-    public static final String WS_URL = "http://www.makslab.com/farmfresh24/admin/ws/newapi.php";
+    public static final String WS_URL = "http://makslab.com/farmfresh24/admin/ws/del_app_api.php";
     //public static final String WS_URL = "http://www.farmfresh24.in/farmfresh24/admin/ws/api.php";
 
 

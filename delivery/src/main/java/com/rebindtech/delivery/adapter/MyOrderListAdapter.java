@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.adapter;
+package com.rebindtech.delivery.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,14 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.maks.farmfresh24.MyOrderDetailsActivity;
-import com.maks.farmfresh24.R;
-import com.maks.farmfresh24.model.OrderPojo;
+import com.rebindtech.delivery.MainActivity;
+import com.rebindtech.delivery.R;
+import com.rebindtech.delivery.model.OrderPojo;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -51,18 +52,18 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
 
         final OrderPojo category = Category.get(position);
 
-        holder.txtOrderDate.setText(category.getDate());
+        holder.txtOrderDate.setText("Date: " + category.getDate());
         holder.txtOrderPrice.setText("Rs. " + category.getAmount());
-        holder.txtOrderId.setText(category.getOId());
-        holder.layoutMyOrder.setOnClickListener(new View.OnClickListener() {
+        holder.txtOrderId.setText("Order ID: " + category.getOId());
+        /*holder.layoutMyOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, MyOrderDetailsActivity.class);
+                Intent intent = new Intent(context, MainActivity.class);
                 intent.putExtra("OrderList", (Serializable) category.getDetails());
                 intent.putExtra("TotalAmount", category.getAmount());
                 context.startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -74,6 +75,8 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
         //public ImageView imageView;
         public TextView txtOrderDate, txtOrderId, txtOrderPrice;
         public LinearLayout layoutMyOrder;
+        public EditText edtStatus;
+        public Button buttonStatusUpdate;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -81,11 +84,19 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
             txtOrderDate = (TextView) itemView.findViewById(R.id.txtMyOrderDate);
             txtOrderId = (TextView) itemView.findViewById(R.id.txtMyOrderOrderId);
             txtOrderPrice = (TextView) itemView.findViewById(R.id.txtMyOrderRupee);
+            edtStatus = (EditText) itemView.findViewById(R.id.editTextStatus);
+            buttonStatusUpdate = (Button) itemView.findViewById(R.id.buttonUpdate);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, MyOrderDetailsActivity.class);
+                    Intent intent = new Intent(context, MainActivity.class);
+                }
+            });
+            buttonStatusUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
                 }
             });
         }

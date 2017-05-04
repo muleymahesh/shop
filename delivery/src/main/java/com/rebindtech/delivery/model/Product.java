@@ -1,10 +1,9 @@
-package com.maks.farmfresh24.model;
+package com.rebindtech.delivery.model;
 
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
-import com.maks.farmfresh24.utils.Constants;
-
+import com.rebindtech.delivery.utils.Constants;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 /**
  * Created by maks on 7/2/16.
  */
-public class Product  implements Serializable
+public class Product implements Serializable
 {
     @SerializedName("p_id")
     String p_id;

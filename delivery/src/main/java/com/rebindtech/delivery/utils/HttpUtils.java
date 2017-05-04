@@ -1,7 +1,8 @@
-package com.maks.farmfresh24.utils;
+package com.rebindtech.delivery.utils;
 
 import android.os.Build;
 import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;

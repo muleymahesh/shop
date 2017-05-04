@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.model;
+package com.rebindtech.delivery.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

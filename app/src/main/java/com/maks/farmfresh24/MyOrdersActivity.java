@@ -29,7 +29,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MyOrdersActivity extends AppCompatActivity implements ProductAdapter.OnItemClickListener {
+public class MyOrdersActivity  extends AppCompatActivity implements ProductAdapter.OnItemClickListener {
 
     private Toolbar toolbar;
     //Creating a List of Category

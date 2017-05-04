@@ -1,9 +1,8 @@
-package com.maks.farmfresh24.model;
+package com.rebindtech.delivery.model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by maks on 12/6/16.
