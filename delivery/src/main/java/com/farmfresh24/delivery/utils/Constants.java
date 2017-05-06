@@ -1,4 +1,4 @@
-package com.rebindtech.delivery.utils;
+package com.farmfresh24.delivery.utils;
 
 /**
  * Created by maks on 7/2/16.

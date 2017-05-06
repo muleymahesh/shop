@@ -1,4 +1,4 @@
-package com.rebindtech.delivery;
+package com.farmfresh24.delivery;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

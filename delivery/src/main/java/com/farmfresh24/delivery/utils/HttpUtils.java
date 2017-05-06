@@ -1,4 +1,4 @@
-package com.rebindtech.delivery.utils;
+package com.farmfresh24.delivery.utils;
 
 import android.os.Build;
 import android.util.Log;

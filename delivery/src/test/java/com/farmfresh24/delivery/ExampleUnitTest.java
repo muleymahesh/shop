@@ -1,4 +1,4 @@
-package com.rebindtech.delivery;
+package com.farmfresh24.delivery;
 
 import org.junit.Test;
 

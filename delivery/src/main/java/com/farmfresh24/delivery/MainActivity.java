@@ -1,4 +1,4 @@
-package com.rebindtech.delivery;
+package com.farmfresh24.delivery;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -12,12 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.rebindtech.delivery.adapter.MyOrderListAdapter;
-import com.rebindtech.delivery.adapter.ProductAdapter;
-import com.rebindtech.delivery.model.OrderDTO;
-import com.rebindtech.delivery.model.OrderPojo;
-import com.rebindtech.delivery.utils.AppPreferences;
-import com.rebindtech.delivery.utils.Constants;
+import com.farmfresh24.delivery.adapter.MyOrderListAdapter;
+import com.farmfresh24.delivery.adapter.ProductAdapter;
+import com.farmfresh24.delivery.model.OrderDTO;
+import com.farmfresh24.delivery.model.OrderPojo;
+import com.farmfresh24.delivery.utils.AppPreferences;
+import com.farmfresh24.delivery.utils.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements ProductAdapter.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+           // finish();
             return true;
         }
 
@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity implements ProductAdapter.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setTitle("My orders");
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+           // setSupportActionBar(toolbar);
+           // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }
     }

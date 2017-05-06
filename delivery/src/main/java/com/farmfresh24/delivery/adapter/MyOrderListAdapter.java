@@ -1,8 +1,10 @@
-package com.rebindtech.delivery.adapter;
+package com.farmfresh24.delivery.adapter;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.rebindtech.delivery.MainActivity;
-import com.rebindtech.delivery.R;
-import com.rebindtech.delivery.model.OrderPojo;
+import com.farmfresh24.delivery.MainActivity;
+import com.farmfresh24.delivery.R;
+import com.farmfresh24.delivery.model.OrderPojo;
+import com.farmfresh24.delivery.utils.Constants;
+import com.farmfresh24.delivery.utils.HttpUtils;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -55,6 +62,12 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
         holder.txtOrderDate.setText("Date: " + category.getDate());
         holder.txtOrderPrice.setText("Rs. " + category.getAmount());
         holder.txtOrderId.setText("Order ID: " + category.getOId());
+        holder.buttonStatusUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeStatus(category.getOId());
+            }
+        });
         /*holder.layoutMyOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,12 +106,6 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
                     Intent intent = new Intent(context, MainActivity.class);
                 }
             });
-            buttonStatusUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
         }
     }
 
@@ -108,5 +115,55 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
 
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    private void changeStatus(String orderId) {
+
+        new HttpAsyncTask().execute("{\"method\":\"update_order\",\"o_id\":\"" + orderId + "\"}");
+
+    }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+
+        ProgressDialog d;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            d = new ProgressDialog(context);
+            d.setMessage("please wait...");
+            if (d.isShowing()) {
+                d.dismiss();
+            } else {
+                d.show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return HttpUtils.requestWebService(Constants.WS_URL, "POST", urls[0]);
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            if (d != null && d.isShowing()) {
+                d.dismiss();
+            }
+
+            if (result != null) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    if (object.optString("result").equalsIgnoreCase("success")) {
+                        Toast.makeText(context, object.optString("responseMessage"), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, object.optString("responseMessage"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

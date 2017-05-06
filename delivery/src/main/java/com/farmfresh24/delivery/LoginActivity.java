@@ -1,4 +1,4 @@
-package com.rebindtech.delivery;
+package com.farmfresh24.delivery;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,9 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rebindtech.delivery.utils.AppPreferences;
-import com.rebindtech.delivery.utils.Constants;
-import com.rebindtech.delivery.utils.HttpUtils;
+import com.farmfresh24.delivery.utils.AppPreferences;
+import com.farmfresh24.delivery.utils.Constants;
+import com.farmfresh24.delivery.utils.HttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +32,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         AppPreferences app = new AppPreferences(LoginActivity.this);
         if (app.getEmail() != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
         } else {
             setContentView(R.layout.activity_login);
 

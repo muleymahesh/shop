@@ -1,4 +1,4 @@
-package com.rebindtech.delivery.model;
+package com.farmfresh24.delivery.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

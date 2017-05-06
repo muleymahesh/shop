@@ -1,9 +1,9 @@
-package com.rebindtech.delivery.model;
+package com.farmfresh24.delivery.model;
 
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
-import com.rebindtech.delivery.utils.Constants;
+import com.farmfresh24.delivery.utils.Constants;
 
 import java.io.Serializable;
 import java.util.List;

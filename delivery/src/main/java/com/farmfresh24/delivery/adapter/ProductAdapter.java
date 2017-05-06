@@ -1,4 +1,4 @@
-package com.rebindtech.delivery.adapter;
+package com.farmfresh24.delivery.adapter;
 
 /**
  * Created by maks on 7/2/16.
@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.rebindtech.delivery.MainActivity;
-import com.rebindtech.delivery.R;
-import com.rebindtech.delivery.model.Product;
-import com.rebindtech.delivery.utils.Utils;
+import com.farmfresh24.delivery.MainActivity;
+import com.farmfresh24.delivery.R;
+import com.farmfresh24.delivery.model.Product;
+import com.farmfresh24.delivery.utils.Utils;
 
 import java.util.List;
 
