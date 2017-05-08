@@ -635,7 +635,7 @@ public class PlaceOrderActivity extends AppCompatActivity {
         String request;
         request = "{\"method\":\"get_discount_from_server\"" +
                 ",\"email\":\"" + new AppPreferences(PlaceOrderActivity.this).getEmail() + "\"" +
-                ",\"totalamount\":\"" + amount + "\"" +
+                ",\"amount\":\"" + amount + "\"" +
                 "}";
         new ProductTask().execute(Constants.WS_URL, request);
     }
@@ -658,6 +658,7 @@ public class PlaceOrderActivity extends AppCompatActivity {
             OkHttpClient client = new OkHttpClient();
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             Log.e("request", ulr[1]);
+            Log.e("request", ulr[0]);
             RequestBody body = RequestBody.create(JSON, ulr[1]);
             Request request = new Request.Builder()
                     .url(ulr[0])

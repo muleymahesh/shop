@@ -57,7 +57,7 @@ public static String LatoFont = "fonts/Roboto-Regular.ttf";
 
     //Webservices
     //public static final String WS_URL = "http://www.makslab.com/farmfresh24/admin/ws/newapi.php";
-    public static final String WS_URL = "http://www.farmfresh24.in/farmfresh24/admin/ws/api.php";
+    public static final String WS_URL = "http://www.farmfresh24.in/farmfresh24/admin/ws/newapi.php";
 
 
     public static final String pincodes[] = {"122101","122002","122003","122008","122009","122010","122011","122018"};

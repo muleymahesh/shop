@@ -91,6 +91,8 @@
             android:label="@string/title_activity_my_wallet"
             android:theme="@style/AppTheme" />
         <activity android:name=".MyOrderDetailsActivity" />
+        <activity android:name=".ccavenuepayment.WebViewActivity" />
+        <activity android:name=".ccavenuepayment.StatusActivity" />
     </application>
 
 </manifest>
