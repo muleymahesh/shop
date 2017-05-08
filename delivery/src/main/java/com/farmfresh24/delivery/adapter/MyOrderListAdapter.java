@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
         final OrderPojo category = Category.get(position);
 
         holder.txtOrderDate.setText("Date: " + category.getDate());
-        holder.txtOrderPrice.setText("Rs. " + category.getAmount());
+        holder.txtOrderPrice.setText("Amount Rs. " + category.getAmount());
         holder.txtOrderId.setText("Order ID: " + category.getOId());
         holder.buttonStatusUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +69,7 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
                 changeStatus(category.getOId());
             }
         });
+        holder.txtAddress.setText("Address: " + Html.fromHtml(category.getAddress()));
         /*holder.layoutMyOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +92,7 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
         public LinearLayout layoutMyOrder;
         public EditText edtStatus;
         public Button buttonStatusUpdate;
+        TextView txtAddress;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +102,7 @@ public class MyOrderListAdapter extends RecyclerView.Adapter<MyOrderListAdapter.
             txtOrderPrice = (TextView) itemView.findViewById(R.id.txtMyOrderRupee);
             edtStatus = (EditText) itemView.findViewById(R.id.editTextStatus);
             buttonStatusUpdate = (Button) itemView.findViewById(R.id.buttonUpdate);
+            txtAddress = (TextView) itemView.findViewById(R.id.textViewAddress);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -30,7 +30,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppPreferences app = new AppPreferences(LoginActivity.this);
+        boolean status = true;
         if (app.getEmail() != null) {
+            if (app.getEmail().length() > 0) {
+                status = false;
+            } else {
+                status = true;
+            }
+        }
+        if (!status) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         } else {

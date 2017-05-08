@@ -28,6 +28,26 @@ public class OrderPojo {
     @Expose
     private ArrayList<OrderDetail> details = new ArrayList<OrderDetail>();
 
+    @SerializedName("address")
+    @Expose
+    private String address;
+
+    public String getoId() {
+        return oId;
+    }
+
+    public void setoId(String oId) {
+        this.oId = oId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     /**
      * @return The oId
      */
