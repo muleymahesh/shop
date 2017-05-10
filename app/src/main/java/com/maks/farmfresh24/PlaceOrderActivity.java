@@ -26,13 +26,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.maks.farmfresh24.ccavenuepayment.Utility.AvenuesParams;
+import com.maks.farmfresh24.ccavenuepayment.Utility.ServiceUtility;
 import com.maks.farmfresh24.ccavenuepayment.WebViewActivity;
-import com.maks.farmfresh24.ccavenuepayment.dto.CardTypeDTO;
-import com.maks.farmfresh24.ccavenuepayment.dto.EMIOptionDTO;
-import com.maks.farmfresh24.ccavenuepayment.dto.PaymentOptionDTO;
-import com.maks.farmfresh24.ccavenuepayment.utility.AvenuesParams;
-import com.maks.farmfresh24.ccavenuepayment.utility.ServiceHandler;
-import com.maks.farmfresh24.ccavenuepayment.utility.ServiceUtility;
 import com.maks.farmfresh24.dbutils.SQLiteUtil;
 import com.maks.farmfresh24.model.Address;
 import com.maks.farmfresh24.model.CartList;
@@ -42,8 +38,6 @@ import com.maks.farmfresh24.utils.AppPreferences;
 import com.maks.farmfresh24.utils.Constants;
 import com.maks.farmfresh24.utils.TypefaceSpan;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,9 +46,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -90,14 +81,15 @@ public class PlaceOrderActivity extends AppCompatActivity {
     ArrayList<Address> addresses = new ArrayList<>();
 
     /* Payment gateway*/
-    Map<String, ArrayList<CardTypeDTO>> cardsList = new LinkedHashMap<String, ArrayList<CardTypeDTO>>();
-    ArrayList<PaymentOptionDTO> payOptionList = new ArrayList<PaymentOptionDTO>();
-    ArrayList<EMIOptionDTO> emiOptionList = new ArrayList<EMIOptionDTO>();
+    String merchantId = "129307";
+    String accessCode = "AVCT70ED45CC50TCCC";
+    String redirectUrl = "http://farmfresh24.in/farmfresh24/admin/ccavenue/ccavResponseHandler.php";
+    String cancelUrl = "http://farmfresh24.in/farmfresh24/admin/ccavenue/ccavResponseHandler.php";
+    String rsaKeyUrl = "http://farmfresh24.in/farmfresh24/admin/ccavenue/GetRSA.php";
 
     private ProgressDialog pDialog;
 
     String selectedPaymentOption;
-    CardTypeDTO selectedCardType;
     AppPreferences pref;
     StringBuilder discountedApplied = new StringBuilder();
 
@@ -478,6 +470,30 @@ public class PlaceOrderActivity extends AppCompatActivity {
         });
     }
 
+    private void callPaymentActivity() {
+        Integer randomNum = ServiceUtility.randInt(0, 9999999);
+        String orderId = randomNum.toString();
+        String vAccessCode = ServiceUtility.chkNull(accessCode).toString().trim();
+        String vMerchantId = ServiceUtility.chkNull(merchantId).toString().trim();
+        String vCurrency = ServiceUtility.chkNull("INR").toString().trim();
+        String vAmount = ServiceUtility.chkNull(discountedAmount).toString().trim();
+        if (!vAccessCode.equals("") && !vMerchantId.equals("") && !vCurrency.equals("") && !vAmount.equals("")) {
+            Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra(AvenuesParams.ACCESS_CODE, ServiceUtility.chkNull(accessCode).toString().trim());
+            intent.putExtra(AvenuesParams.MERCHANT_ID, ServiceUtility.chkNull(merchantId).toString().trim());
+            intent.putExtra(AvenuesParams.ORDER_ID, ServiceUtility.chkNull(orderId).toString().trim());
+            intent.putExtra(AvenuesParams.CURRENCY, ServiceUtility.chkNull("INR").toString().trim());
+            intent.putExtra(AvenuesParams.AMOUNT, ServiceUtility.chkNull(discountedAmount).toString().trim());
+
+            intent.putExtra(AvenuesParams.REDIRECT_URL, ServiceUtility.chkNull(redirectUrl).toString().trim());
+            intent.putExtra(AvenuesParams.CANCEL_URL, ServiceUtility.chkNull(cancelUrl).toString().trim());
+            intent.putExtra(AvenuesParams.RSA_KEY_URL, ServiceUtility.chkNull(rsaKeyUrl).toString().trim());
+            startActivity(intent);
+        } else {
+            showToast("All parameters are mandatory.");
+        }
+    }
+
     private void placeOrder(String OrderMode) {
         String data1 = "\"[";
         String p_id = "", qty = "";
@@ -489,7 +505,7 @@ public class PlaceOrderActivity extends AppCompatActivity {
         }
 
         data1 += "]\"";
-         req = "{\"method\":\"add_oder\"" +
+        req = "{\"method\":\"add_oder\"" +
                 ",\"first_name\":\"" + addresses.get(0).getFname() + "\"" +
                 ",\"last_name\":\"" + addresses.get(0).getLname() + "\"," +
                 "\"gender\":\"Male\"" +
@@ -522,110 +538,6 @@ public class PlaceOrderActivity extends AppCompatActivity {
         new HttpAsyncTask().execute(Constants.WS_URL, req);
 
     }
-
-    private boolean isDouble(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-
-    /*private double getAmount() {
-        Double amount = 10.0;
-        if (isDouble(txtAmt.getText().toString())) {
-            amount = Double.parseDouble(this.amount);
-            return amount;
-        } else {
-            Toast.makeText(getApplicationContext(), "Paying Default Amount ₹10", Toast.LENGTH_LONG).show();
-            return amount;
-        }
-    }*/
-
-    /*public void makePayment(View view) {
-
-        String phone = "8882434664";
-        String productName = "product_name";
-        String firstName = "piyush";
-        String txnId = "0nf7" + System.currentTimeMillis();
-        String email = "piyush.jain@payu.in";
-        String sUrl = "https://test.payumoney.com/mobileapp/payumoney/success.php";
-        String fUrl = "https://test.payumoney.com/mobileapp/payumoney/failure.php";
-        String udf1 = "";
-        String udf2 = "";
-        String udf3 = "";
-        String udf4 = "";
-        String udf5 = "";
-        boolean isDebug = true;
-        String key = "mJX31QtA";
-        String merchantId = "5743923";
-    }
-
-    private void showDialogMessage(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(TAG);
-        builder.setMessage(message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-
-    }
-*/
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
-            if (data != null) {
-
-                *//**
-                 * Here, data.getStringExtra("payu_response") ---> Implicit response sent by PayU
-                 * data.getStringExtra("result") ---> Response received from merchant's Surl/Furl
-                 *
-                 * PayU sends the same response to merchant server and in app. In response check the value of key "status"
-                 * for identifying status of transaction. There are two possible status like, success or failure
-                 * *//*
-
-                try {
-                    JSONObject response = new JSONObject(data.getStringExtra("payu_response"));
-                    if (response.optString("status").equalsIgnoreCase("success")) {
-                        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-                        placeOrder("Online");
-                    } else {
-                        Toast.makeText(this, "Fail", Toast.LENGTH_SHORT).show();
-                    }
-                    *//*new android.app.AlertDialog.Builder(this)
-                            .setCancelable(false)
-                            .setMessage("Your Payment has been " + response.optString("status"))
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    dialog.dismiss();
-
-                                }
-                            }).show();*//*
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-*//*
-                new android.app.AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setMessage("Payu's Data : " + data.getStringExtra("payu_response") + "\n\n\n Merchant's Data: " + data.getStringExtra("result"))
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.dismiss();
-                            }
-                        }).show();*//*
-
-            } else {
-                Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
-            }
-        }
-    }*/
-
 
     private void getDiscounts() {
         String p_id = "";
@@ -708,143 +620,5 @@ public class PlaceOrderActivity extends AppCompatActivity {
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-    }
-
-    public void callPaymentActivity() {
-        //generating order number
-        AppPreferences pref = new AppPreferences(PlaceOrderActivity.this);
-        Integer randomNum = ServiceUtility.randInt(0, 9999999);
-        String vOrderId = ServiceUtility.chkNull(randomNum).toString().trim();
-        String vRsaKeyUrl = ServiceUtility.chkNull("http://farmfresh24.in/farmfresh24/admin/ccavenue/GetRSA.php").toString().trim();
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(AvenuesParams.ORDER_ID, ServiceUtility.chkNull(randomNum).toString().trim());
-        intent.putExtra(AvenuesParams.ACCESS_CODE, ServiceUtility.chkNull("AVCT70ED45CC50TCCC").toString().trim());
-        intent.putExtra(AvenuesParams.MERCHANT_ID, ServiceUtility.chkNull("129307").toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_NAME, ServiceUtility.chkNull(pref.getFname()).toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_ADDRESS, ServiceUtility.chkNull(addresses.get(0).getArea() + " " + addresses.get(0).getAddr()).toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_COUNTRY, ServiceUtility.chkNull("India").toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_STATE, ServiceUtility.chkNull(addresses.get(0).getAddr()).toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_CITY, ServiceUtility.chkNull(addresses.get(0).getArea()).toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_ZIP, ServiceUtility.chkNull(addresses.get(0).getZipcode()).toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_TEL, ServiceUtility.chkNull(addresses.get(0).getPhone()).toString().trim());
-        intent.putExtra(AvenuesParams.BILLING_EMAIL, ServiceUtility.chkNull(addresses.get(0).getEmail()).toString().trim());
-        intent.putExtra(AvenuesParams.DELIVERY_NAME, ServiceUtility.chkNull(pref.getFname()).toString().trim());
-        intent.putExtra(AvenuesParams.DELIVERY_ADDRESS, ServiceUtility.chkNull(addresses.get(0).getArea() + " " + addresses.get(0).getAddr()).toString().trim());
-        intent.putExtra(AvenuesParams.DELIVERY_COUNTRY, ServiceUtility.chkNull("India").toString().trim());
-        intent.putExtra(AvenuesParams.DELIVERY_STATE, ServiceUtility.chkNull(addresses.get(0).getArea()).toString().trim());
-        intent.putExtra(AvenuesParams.DELIVERY_CITY, ServiceUtility.chkNull(addresses.get(0).getLandmark()).toString().trim());
-        intent.putExtra(AvenuesParams.DELIVERY_ZIP, ServiceUtility.chkNull(addresses.get(0).getZipcode()).toString().trim());
-        intent.putExtra(AvenuesParams.DELIVERY_TEL, ServiceUtility.chkNull(addresses.get(0).getPhone()).toString().trim());
-
-        /*String cardCVV = ServiceUtility.chkNull(cardCvv.getText()).toString().trim();
-        if (((LinearLayout) findViewById(R.id.vCardCVVCont)).getVisibility() == 0 && vCardCVV.getVisibility() == 0) {
-            cardCVV = ServiceUtility.chkNull(vCardCVV.getText()).toString().trim();
-        }*/
-        //intent.putExtra(AvenuesParams.CVV, cardCVV);
-        intent.putExtra(AvenuesParams.REDIRECT_URL, ServiceUtility.chkNull("http://farmfresh24.in/farmfresh24/admin/ccavenue/ccavResponseHandler.php").toString().trim());
-        intent.putExtra(AvenuesParams.CANCEL_URL, ServiceUtility.chkNull("http://farmfresh24.in/farmfresh24/admin/ccavenue/ccavResponseHandler.php").toString().trim());
-        intent.putExtra(AvenuesParams.RSA_KEY_URL, ServiceUtility.chkNull("http://farmfresh24.in/farmfresh24/admin/ccavenue/GetRSA.php").toString().trim());
-        intent.putExtra(AvenuesParams.PAYMENT_OPTION, selectedPaymentOption);
-        /*intent.putExtra(AvenuesParams.CARD_NUMBER, ServiceUtility.chkNull(cardNumber.getText()).toString().trim());
-        intent.putExtra(AvenuesParams.EXPIRY_YEAR, ServiceUtility.chkNull(expiryYear.getText()).toString().trim());
-        intent.putExtra(AvenuesParams.EXPIRY_MONTH, ServiceUtility.chkNull(expiryMonth.getText()).toString().trim());
-        intent.putExtra(AvenuesParams.ISSUING_BANK, ServiceUtility.chkNull(issuingBank.getText()).toString().trim());*/
-        startActivity(intent);
-    }
-
-    private JSONObject jsonRespObj;
-    private Map<String, String> paymentOptions = new LinkedHashMap<String, String>();
-
-    /**
-     * Async task class to get json by making HTTP call
-     */
-    private class GetData extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Showing progress dialog
-            pDialog = new ProgressDialog(PlaceOrderActivity.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            // Creating service handler class instance
-            ServiceHandler sh = new ServiceHandler();
-
-            // Making a request to url and getting response
-            List<NameValuePair> vParams = new ArrayList<NameValuePair>();
-            vParams.add(new BasicNameValuePair(AvenuesParams.COMMAND, "getJsonDataVault"));
-            vParams.add(new BasicNameValuePair(AvenuesParams.ACCESS_CODE, "AVCT70ED45CC50TCCC".toString().trim()));
-            vParams.add(new BasicNameValuePair(AvenuesParams.CURRENCY, "INR".toString().trim()));
-            vParams.add(new BasicNameValuePair(AvenuesParams.AMOUNT, String.valueOf(discountedAmount).toString().trim()));
-            vParams.add(new BasicNameValuePair(AvenuesParams.CUSTOMER_IDENTIFIER, pref.getFname().toString().trim()));
-
-            String vJsonStr = sh.makeServiceCall(com.maks.farmfresh24.ccavenuepayment.utility.Constants.JSON_URL, ServiceHandler.POST, vParams);
-
-            Log.d("Response: ", "> " + vJsonStr);
-
-            if (vJsonStr != null && !vJsonStr.equals("")) {
-                try {
-                    jsonRespObj = new JSONObject(vJsonStr);
-                    if (jsonRespObj != null) {
-                        if (jsonRespObj.getString("payOptions") != null) {
-                            JSONArray vPayOptsArr = new JSONArray(jsonRespObj.getString("payOptions"));
-                            for (int i = 0; i < vPayOptsArr.length(); i++) {
-                                JSONObject vPaymentOption = vPayOptsArr.getJSONObject(i);
-                                if (vPaymentOption.getString("payOpt").equals("OPTIVRS")) continue;
-                                payOptionList.add(new PaymentOptionDTO(vPaymentOption.getString("payOpt"), vPaymentOption.getString("payOptDesc").toString()));//Add payment option only if it includes any card
-                                paymentOptions.put(vPaymentOption.getString("payOpt"), vPaymentOption.getString("payOptDesc"));
-                                try {
-                                    JSONArray vCardArr = new JSONArray(vPaymentOption.getString("cardsList"));
-                                    if (vCardArr.length() > 0) {
-                                        cardsList.put(vPaymentOption.getString("payOpt"), new ArrayList<CardTypeDTO>()); //Add a new Arraylist
-                                        for (int j = 0; j < vCardArr.length(); j++) {
-                                            JSONObject card = vCardArr.getJSONObject(j);
-                                            try {
-                                                CardTypeDTO cardTypeDTO = new CardTypeDTO();
-                                                cardTypeDTO.setCardName(card.getString("cardName"));
-                                                cardTypeDTO.setCardType(card.getString("cardType"));
-                                                cardTypeDTO.setPayOptType(card.getString("payOptType"));
-                                                cardTypeDTO.setDataAcceptedAt(card.getString("dataAcceptedAt"));
-                                                cardTypeDTO.setStatus(card.getString("status"));
-
-                                                cardsList.get(vPaymentOption.getString("payOpt")).add(cardTypeDTO);
-                                            } catch (Exception e) {
-                                                Log.e("ServiceHandler", "Error parsing cardType", e);
-                                            }
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    Log.e("ServiceHandler", "Error parsing payment option", e);
-                                }
-                            }
-                        }
-                        if ((jsonRespObj.getString("EmiBanks") != null && jsonRespObj.getString("EmiBanks").length() > 0) &&
-                                (jsonRespObj.getString("EmiPlans") != null && jsonRespObj.getString("EmiPlans").length() > 0)) {
-                            paymentOptions.put("OPTEMI", "Credit Card EMI");
-                            payOptionList.add(new PaymentOptionDTO("OPTEMI", "Credit Card EMI"));
-                        }
-                    }
-                } catch (JSONException e) {
-                    Log.e("ServiceHandler", "Error fetching data from server", e);
-                }
-            } else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            // Dismiss the progress dialog
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            selectedPaymentOption = "OPTDBCRD";
-        }
     }
 }

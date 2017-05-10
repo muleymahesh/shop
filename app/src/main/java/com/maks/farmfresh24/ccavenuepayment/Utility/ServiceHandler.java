@@ -1,4 +1,4 @@
-package com.maks.farmfresh24.ccavenuepayment.utility;
+package com.maks.farmfresh24.ccavenuepayment.Utility;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+
 public class ServiceHandler {
- 
     static String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
- 
+
     /**
      * Making service call
      * @url - url to make request
@@ -30,7 +30,7 @@ public class ServiceHandler {
     public String makeServiceCall(String url, int method) {
         return this.makeServiceCall(url, method, null);
     }
- 
+
     /**
      * Making service call
      * @url - url to make request
@@ -44,13 +44,13 @@ public class ServiceHandler {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpEntity httpEntity = null;
             HttpResponse httpResponse = null;
-            
+
             //Setting user agent
-            httpClient.getParams().setParameter(  
-            	    HttpProtocolParams.USER_AGENT,  
-            	    "Mozilla/5.0 (Linux; U; Android-4.0.3; en-us; Galaxy Nexus Build/IML74K) AppleWebKit/535.7 (KHTML, like Gecko) CrMo/16.0.912.75 Mobile Safari/535.7"  
-            	);
-             
+            httpClient.getParams().setParameter(
+                    HttpProtocolParams.USER_AGENT,
+                    "Mozilla/5.0 (Linux; U; Android-4.0.3; en-us; Galaxy Nexus Build/IML74K) AppleWebKit/535.7 (KHTML, like Gecko) CrMo/16.0.912.75 Mobile Safari/535.7"
+            );
+
             // Checking http request method type
             if (method == POST) {
                 HttpPost httpPost = new HttpPost(url);
