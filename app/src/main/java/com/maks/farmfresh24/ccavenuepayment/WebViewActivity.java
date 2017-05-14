@@ -1,6 +1,7 @@
 package com.maks.farmfresh24.ccavenuepayment;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -115,20 +116,28 @@ public class WebViewActivity extends ActionBarActivity implements Communicator {
                         // process the html as needed by the app
                         Log.v("Logs", "-------------- Process HTML : " + html);
                         String status = null;
+                        String sendStatus = "Unknown";
                         if (html.indexOf("Failure") != -1) {
                             status = "Transaction Declined!";
+                            sendStatus = "Failure";
                         } else if (html.indexOf("Success") != -1) {
                             status = "Transaction Successful!";
+                            sendStatus = "Success";
                         } else if (html.indexOf("Aborted") != -1) {
                             status = "Transaction Cancelled!";
+                            sendStatus = "Cancel";
                         } else {
                             status = "Status Not Known!";
                         }
                         //Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("transStatus", sendStatus);
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
 
-                        Intent intent = new Intent(getApplicationContext(), StatusActivity.class);
+                       /* Intent intent = new Intent(getApplicationContext(), StatusActivity.class);
                         intent.putExtra("transStatus", status);
-                        startActivity(intent);
+                        startActivity(intent);*/
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.v("Logs", "-------------- Error : " + e);

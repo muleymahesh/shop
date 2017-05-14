@@ -1,5 +1,6 @@
 package com.maks.farmfresh24;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -56,6 +57,7 @@ import okhttp3.Response;
 public class PlaceOrderActivity extends AppCompatActivity {
 
     public static final String TAG = PlaceOrderActivity.class.getSimpleName();
+    private static final int PAYMENT_RECEIVED = 1;
 
     private Toolbar toolbar;
     private TextView txtDate;
@@ -488,9 +490,27 @@ public class PlaceOrderActivity extends AppCompatActivity {
             intent.putExtra(AvenuesParams.REDIRECT_URL, ServiceUtility.chkNull(redirectUrl).toString().trim());
             intent.putExtra(AvenuesParams.CANCEL_URL, ServiceUtility.chkNull(cancelUrl).toString().trim());
             intent.putExtra(AvenuesParams.RSA_KEY_URL, ServiceUtility.chkNull(rsaKeyUrl).toString().trim());
-            startActivity(intent);
+            startActivityForResult(intent, PAYMENT_RECEIVED);
         } else {
             showToast("All parameters are mandatory.");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PAYMENT_RECEIVED) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getStringExtra("transStatus");
+                if (result.equalsIgnoreCase("Success")) {
+                    placeOrder("Online");
+                } else {
+                    Toast.makeText(this, "Tansactiona has been failed. Please try again", Toast.LENGTH_SHORT).show();
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
         }
     }
 

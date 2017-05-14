@@ -119,8 +119,8 @@ if(result!=null) {
             app.setFname(json.getString("fname"));
             app.setLogin(true);
 
-//            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-//            LoginActivity.this.startActivity(mainIntent);
+            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+            LoginActivity.this.startActivity(mainIntent);
             LoginActivity.this.finish();
 
         } else {
