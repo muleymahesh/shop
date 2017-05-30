@@ -17,8 +17,8 @@ android {
         applicationId "com.maks.farmfresh24"
         minSdkVersion 12
         targetSdkVersion 25
-        versionCode 16
-        versionName "1.6"
+        versionCode 18
+        versionName "1.8"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

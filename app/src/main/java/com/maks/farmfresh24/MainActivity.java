@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements CatgoryAdapter.On
             "My Shopping Cart",
             "My Wishlist",
             "My Orders",
-            "About us",
+            /*"About us",*/
             "Feedback",
             "Change password",
             "Bulk orders",
@@ -392,20 +392,20 @@ public class MainActivity extends AppCompatActivity implements CatgoryAdapter.On
                 break;
 
             }
-            case 5://for Feedback screen
+            /*case 5://for Feedback screen
             {
                 Intent intent5 = new Intent(getApplicationContext(), AboutUsActivity.class);
                 startActivity(intent5);
                 break;
-            }
-            case 6://for Service catogory list
+            }*/
+            case 5://for Service catogory list
             {
                 Intent intent6 = new Intent(getApplicationContext(), FeedbackActivity.class);
                 startActivity(intent6);
                 break;
 
             }
-            case 7://for Service catogory list
+            case 6://for Service catogory list
             {
                 if (new AppPreferences(MainActivity.this).isLogin()) {
                     Intent intent4 = new Intent(getApplicationContext(), PasswordResetActivity.class);
@@ -416,17 +416,17 @@ public class MainActivity extends AppCompatActivity implements CatgoryAdapter.On
                 }
                 break;
             }
-            case 8://for Service catogory list
+            case 7://for Service catogory list
             {
                 Intent intent4 = new Intent(getApplicationContext(), ContactUsActivity.class);
                 startActivity(intent4);
                 break;
             }
-            case 9:
+            case 8:
                 Intent contactIntent = new Intent(MainActivity.this, ContactUsActivity.class);
                 startActivity(contactIntent);
                 break;
-            case 10: //logout
+            case 9: //logout
                 new AppPreferences(MainActivity.this).logout();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);

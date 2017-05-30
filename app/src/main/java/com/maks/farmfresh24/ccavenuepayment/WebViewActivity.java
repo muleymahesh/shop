@@ -127,7 +127,7 @@ public class WebViewActivity extends ActionBarActivity implements Communicator {
                             status = "Transaction Cancelled!";
                             sendStatus = "Cancel";
                         } else {
-                            status = "Status Not Known!";
+                            status = "Status Not Known! ";
                         }
                         //Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
                         Intent returnIntent = new Intent();
